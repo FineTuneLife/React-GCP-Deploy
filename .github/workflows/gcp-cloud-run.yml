@@ -44,6 +44,13 @@ jobs:
           service_account: 'gcp-github-actions@react-cloud-run-deploy.iam.gserviceaccount.com'
       - name: 'Set up Cloud SDK'
         uses: 'google-github-actions/setup-gcloud@v1'
+      #Setup .env file    
+      - name : Setup ISPO ENV Files
+        env:
+          ISPO_FRONTEND_UAT_ENV: ${{ secrets.REACT_ENV }}
+        shell: bash
+        run: |- 
+           echo "${{ secrets.REACT_ENV }}" > .env           
       - name: Build and push
         id: docker_build
         uses: docker/build-push-action@v3
@@ -60,7 +67,7 @@ jobs:
         run: docker push gcr.io/$PROJECT_ID/$APP_NAME:${{ github.sha }}
       - name: Deploy to gcloud run to PROD
         if: github.ref == 'refs/heads/main'
-        run: gcloud run deploy $APP_NAME--image=gcr.io/$PROJECT_ID/$APP_NAME:${{ github.sha }} 
+        run: gcloud run deploy $APP_NAME --image=gcr.io/$PROJECT_ID/$APP_NAME:${{ github.sha }} 
              --port=$PORT --allow-unauthenticated --project=$PROJECT_ID --region=$LOCATION --memory=$MEMORY
              --timeout=$TIMEOUT --memory=$RAM --max-instances=$MAX_REQUESTS_PER_CONTAINER --min-instances=$MIN_REQUESTS_PER_CONTAINER 
              --set-env-vars NODE_ENV=production
