@@ -23,7 +23,7 @@ env:
   AUTO_SCALING: 1
   TIMEOUT: 8s
   CPU: 2
-  MEMORY: 128Mi  
+  MEMORY: 256Mi  
   MAX_REQUESTS_PER_CONTAINER: 1
   MIN_REQUESTS_PER_CONTAINER: 5
   PROJECT_ID: react-cloud-run-deploy
@@ -48,7 +48,7 @@ jobs:
       #Setup .env file    
       - name : Setup REACT ENV Files
         env:
-          ISPO_FRONTEND_UAT_ENV: ${{ secrets.REACT_ENV }}
+          REACT_ENV: ${{ secrets.REACT_ENV }}
         shell: bash
         run: |- 
            echo "${{ secrets.REACT_ENV }}" > .env           
