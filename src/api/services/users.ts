@@ -4,7 +4,7 @@ import { User } from "../../models";
 const getUsers = async (): Promise<User[]> => {
     try {
         const response = await axiosClient.get('/users');
-        await delay(1000);
+        await delay(500);
 
         const result: User[] = response.data;
         return result;
