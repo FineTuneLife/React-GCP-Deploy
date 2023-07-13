@@ -1,0 +1,68 @@
+name: GCP Cloud Run
+on:
+  push:
+    branches:
+    - main
+    paths:
+    - './*'
+  workflow_dispatch:
+    inputs:
+      logLevel:
+        description: 'Log Level'
+        required: true
+        default: 'warning'
+        type: choice
+        options:
+          - info
+          - warning
+          - debug
+env:
+  PORT: 80
+  LOCATION: us-central1
+  AUTO_SCALING: 1
+  TIMEOUT: 8s
+  INITIAL_DELAY: 2
+  FAILURE_TRESHOLD: 2
+  CPU: 2
+  MEMORY: 128Mi  
+  MAX_REQUESTS_PER_CONTAINER: 100
+  MIN_REQUESTS_PER_CONTAINER: 5
+  PROJECT_ID: react-cloud-run-deploy
+  APP_NAME: react-gcp-cloud-run
+  
+permissions:
+    id-token: write
+    contents: read
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - id: auth
+        name: 'Authenticate to Google Cloud'
+        uses: 'google-github-actions/auth@v1'
+        with:
+          workload_identity_provider: ''
+          service_account: 'gcp-github-actions@react-cloud-run-deploy.iam.gserviceaccount.com'
+      - name: 'Set up Cloud SDK'
+        uses: 'google-github-actions/setup-gcloud@v1'
+      - name: Build and push
+        id: docker_build
+        uses: docker/build-push-action@v3
+        with:
+          context: ./
+          file: ./Dockerfile
+          push: false
+          tags: |-
+            gcr.io/${{env.PROJECT_ID}}/${{env.APP_NAME}}:${{ github.sha }} 
+            gcr.io/${{env.PROJECT_ID}}/${{env.APP_NAME}}:latest
+      - name: Authorize Docker push
+        run: gcloud auth configure-docker
+      - name: Push GCR.io
+        run: docker push gcr.io/$PROJECT_ID/$APP_NAME:${{ github.sha }}
+      - name: Deploy to gcloud run to PROD
+        if: github.ref == 'refs/heads/main'
+        run: gcloud run deploy $APP_NAME--image=gcr.io/$PROJECT_ID/$APP_NAME:${{ github.sha }} 
+             --port=$PORT --allow-unauthenticated --project=$PROJECT_ID --region=$LOCATION --memory=$MEMORY
+             --timeout=$TIMEOUT --memory=$RAM --max-instances=$MAX_REQUESTS_PER_CONTAINER --min-instances=$MIN_REQUESTS_PER_CONTAINER 
+             --set-env-vars NODE_ENV=production
