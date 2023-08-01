@@ -24,8 +24,8 @@ env:
   TIMEOUT: 8s
   CPU: 2
   MEMORY: 512Mi  
-  MAX_REQUESTS_PER_CONTAINER: 1
-  MIN_REQUESTS_PER_CONTAINER: 5
+  MAX_REQUESTS_PER_CONTAINER: 5
+  MIN_REQUESTS_PER_CONTAINER: 1
   PROJECT_ID: react-cloud-run-deploy
   APP_NAME: react-gcp-cloud-run
   
@@ -71,5 +71,5 @@ jobs:
         if: github.ref == 'refs/heads/main'
         run: gcloud run deploy ${{env.APP_NAME}} --image="gcr.io/${{env.PROJECT_ID}}/${{env.APP_NAME}}:${{ github.sha }}" 
              --port=${{env.PORT}} --allow-unauthenticated --project=${{env.PROJECT_ID}} --region=${{env.LOCATION}} --memory=${{env.MEMORY}}
-             --timeout=${{env.TIMEOUT}} --memory=${{env.RAM}} --max-instances=${{env.MAX_REQUESTS_PER_CONTAINER}} --min-instances=${{env.MIN_REQUESTS_PER_CONTAINER}} 
+             --timeout=${{env.TIMEOUT}} --memory=${{env.MEMORY}} --max-instances=${{env.MAX_REQUESTS_PER_CONTAINER}} --min-instances=${{env.MIN_REQUESTS_PER_CONTAINER}} 
              --set-env-vars NODE_ENV=production --concurrency=${{env.AUTO_SCALING}}
