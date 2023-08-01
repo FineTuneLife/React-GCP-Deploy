@@ -18,7 +18,7 @@ on:
           - warning
           - debug
 env:
-  PORT: 80
+  PORT: 8080
   LOCATION: europe-west1
   AUTO_SCALING: 1
   TIMEOUT: 8s
