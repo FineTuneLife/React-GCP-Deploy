@@ -32,6 +32,7 @@ env:
 permissions:
     id-token: write
     contents: read
+    actions: read
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -69,6 +70,6 @@ jobs:
       - name: Deploy to gcloud run to PROD
         if: github.ref == 'refs/heads/main'
         run: gcloud run deploy ${{env.APP_NAME}} --image="gcr.io/${{env.PROJECT_ID}}/${{env.APP_NAME}}:${{ github.sha }}" 
-             --port=${{env.$PORT}} --allow-unauthenticated --project=${{env.$PROJECT_ID}} --region=${{env.$LOCATION}} --memory=${{env.$MEMORY}}
-             --timeout=${{env.$TIMEOUT}} --memory=${{env.$RAM}} --max-instances=${{env.$MAX_REQUESTS_PER_CONTAINER}} --min-instances=${{env.$MIN_REQUESTS_PER_CONTAINER}} 
-             --set-env-vars NODE_ENV=production
+             --port=${{env.PORT}} --allow-unauthenticated --project=${{env.PROJECT_ID}} --region=${{env.LOCATION}} --memory=${{env.MEMORY}}
+             --timeout=${{env.TIMEOUT}} --memory=${{env.RAM}} --max-instances=${{env.MAX_REQUESTS_PER_CONTAINER}} --min-instances=${{env.MIN_REQUESTS_PER_CONTAINER}} 
+             --set-env-vars NODE_ENV=production --concurrency=${{env.AUTO_SCALING}}
