@@ -42,8 +42,8 @@ jobs:
         name: 'Authenticate to Google Cloud'
         uses: 'google-github-actions/auth@v1'
         with:
-          workload_identity_provider: 'projects/746725945847/locations/global/workloadIdentityPools/tutorial-github-pool/providers/tutorial-github-provider'
-          service_account: 'gcp-github-actions@react-cloud-run-deploy.iam.gserviceaccount.com'
+          workload_identity_provider: 'projects/154225636501/locations/global/workloadIdentityPools/tutorial-github-pool/providers/tutorial-github-provider'
+          service_account: 'gcp-github-actions@react-cloud-run-deploy-397303.iam.gserviceaccount.com'
       - name: 'Set up Cloud SDK'
         uses: 'google-github-actions/setup-gcloud@v1'
       #Setup .env file    
