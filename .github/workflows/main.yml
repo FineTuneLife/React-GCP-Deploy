@@ -1,4 +1,4 @@
-name: GCP Cloud Run
+name: main
 on:
   push:
     branches:
