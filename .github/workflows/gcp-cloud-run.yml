@@ -26,7 +26,7 @@ env:
   MEMORY: 512Mi  
   MAX_REQUESTS_PER_CONTAINER: 5
   MIN_REQUESTS_PER_CONTAINER: 1
-  PROJECT_ID: react-cloud-run-deploy
+  PROJECT_ID: react-cloud-run-deploy-397303
   APP_NAME: react-gcp-cloud-run
   
 permissions:
